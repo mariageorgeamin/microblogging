@@ -17,5 +17,10 @@ Route::post('register', 'PassportController@register');
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'PassportController@details');
     Route::get('users', 'PassportController@index');
+    // Route::resource('tweets', 'TweetController');
+    Route::get('tweets', 'TweetController@index');
+    Route::get('tweets/{tweet}', 'TweetController@show');
+    Route::post('tweets', 'TweetController@store');
+    Route::delete('tweets/{tweet}', 'TweetController@destroy');
 
 });
