@@ -110,4 +110,18 @@ class PassportController extends Controller
         ]);
     }
 
+    public function timeline()
+    {
+        $following = User::find(auth()->user()->id)->followings()->pluck('name')->toArray();
+        $following_ids = User::find(auth()->user()->id)->followings()->pluck('id')->toArray();
+        $tweets = Tweet::with('users')->whereIn('user_id', $following_ids)->get()->pluck('users.name', 'description');
+
+        return response()->json([
+            'success' => true,
+            'following' => $following,
+            'tweets' => $tweets,
+
+        ]);
+    }
+
 }
