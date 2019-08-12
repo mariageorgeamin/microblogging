@@ -80,4 +80,34 @@ class PassportController extends Controller
             'data' => $users,
         ]);
     }
+    public function followUser(int $profileId)
+    {
+        $user = User::find($profileId);
+        if (!$user) {
+            return response()->json([
+                'error' => 'error user doesnot exist',
+            ]);
+        }
+
+        $user->followers()->attach(auth()->user()->id);
+        return response()->json([
+            'success' => 'you followed user successfully',
+        ]);
+    }
+
+    public function unFollowUser(int $profileId)
+    {
+        $user = User::find($profileId);
+        if (!$user) {
+
+            return response()->json([
+                'error' => 'error user doesnot exist',
+            ]);
+        }
+        $user->followers()->detach(auth()->user()->id);
+        return response()->json([
+            'success' => 'you unfollowed user successfully',
+        ]);
+    }
+
 }
