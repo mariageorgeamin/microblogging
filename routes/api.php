@@ -19,6 +19,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('users', 'PassportController@index');
     Route::post('users/{profileId}/follow', 'PassportController@followUser')->name('user.follow');
     Route::post('users/{profileId}/unfollow', 'PassportController@unFollowUser')->name('user.unfollow');
+    Route::post('timeline', 'PassportController@timeline')->name('user.timeline');
     // Route::resource('tweets', 'TweetController');
     Route::get('tweets', 'TweetController@index');
     Route::get('tweets/{tweet}', 'TweetController@show');
