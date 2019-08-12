@@ -17,12 +17,15 @@ class PassportController extends Controller
     public function register(Request $request)
     {
         $img = Storage::putFile('public/user', $request->file('img'));
-        $this->validate($request, [
-            'name' => 'required|min:3',
+
+        $validator = \Validator::make($request->all(), ['name' => 'required|min:3',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-            'img' => 'required',
-        ]);
+            'img' => 'required']);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         $user = User::create([
             'name' => $request->name,
