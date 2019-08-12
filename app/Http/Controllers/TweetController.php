@@ -39,7 +39,7 @@ class TweetController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'description' => 'required',
+            'description' => 'required|unique:tweets',
         ]);
 
         $tweet = new Tweet();
