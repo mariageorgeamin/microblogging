@@ -115,8 +115,7 @@ class PassportController extends Controller
     {
         $following = User::find(auth()->user()->id)->followings()->pluck('name')->toArray();
         $following_ids = User::find(auth()->user()->id)->followings()->pluck('id')->toArray();
-        $tweets = Tweet::with('users')->whereIn('user_id', $following_ids)->get()->pluck('users.name', 'description');
-
+        $tweets = Tweet::whereIn('user_id', $following_ids)->join('users', 'tweets.user_id', '=', 'users.id')->paginate(10, ['description', 'users.name']);
         return response()->json([
             'success' => true,
             'following' => $following,
