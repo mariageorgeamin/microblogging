@@ -13,14 +13,14 @@
 
 Route::post('login', 'PassportController@login');
 Route::post('register', 'PassportController@register');
+Route::get('users', 'PassportController@index');
 
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'PassportController@details');
-    Route::get('users', 'PassportController@index');
     Route::post('users/{profileId}/follow', 'PassportController@followUser')->name('user.follow');
     Route::post('users/{profileId}/unfollow', 'PassportController@unFollowUser')->name('user.unfollow');
-    Route::post('timeline', 'PassportController@timeline')->name('user.timeline');
-    // Route::resource('tweets', 'TweetController');
+    Route::get('timeline', 'PassportController@timeline')->name('user.timeline');
+
     Route::get('tweets', 'TweetController@index');
     Route::get('tweets/{tweet}', 'TweetController@show');
     Route::post('tweets', 'TweetController@store');
