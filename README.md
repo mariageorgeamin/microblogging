@@ -74,6 +74,7 @@ php artisan serve
 ```
 ## Login
 You can login with seeded data the default password is 123456
+
 **When testing Details API or any API that requires a user to be authenticated, you need to specify two headers. You must specify access token as a Bearer token in the Authorization header. Basically, you have to concatenate the access token that you received after login and registration with the Bearer followed by a space.**
 ```
 'headers' => [
