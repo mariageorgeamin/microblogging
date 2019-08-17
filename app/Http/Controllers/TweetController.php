@@ -44,8 +44,9 @@ class TweetController extends Controller
 
         $tweet = new Tweet();
         $tweet->description = $request->description;
+        $userTweets = auth()->user()->tweets();
 
-        if (auth()->user()->tweets()->save($tweet)) {
+        if ($userTweets->save($tweet)) {
             return response()->json([
                 'success' => true,
                 'data' => $tweet->toArray(),
