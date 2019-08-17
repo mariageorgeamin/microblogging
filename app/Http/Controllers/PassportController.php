@@ -9,12 +9,6 @@ use Illuminate\Support\Facades\Storage;
 
 class PassportController extends Controller
 {
-    /**
-     * Handles Registration Request
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function register(Request $request)
     {
         $img = Storage::putFile('public/user', $request->file('img'));
@@ -41,12 +35,6 @@ class PassportController extends Controller
         return response()->json(['success' => true, 'token' => $token], 200);
     }
 
-    /**
-     * Handles Login Request
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function login(Request $request)
     {
         $credentials = [
@@ -62,11 +50,6 @@ class PassportController extends Controller
         }
     }
 
-    /**
-     * Returns Authenticated User Details
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function details()
     {
         return response()->json(['user' => auth()->user()], 200);
@@ -91,9 +74,7 @@ class PassportController extends Controller
         }
 
         $user->followers()->attach(auth()->user()->id);
-        return response()->json([
-            'success' => 'you followed user successfully',
-        ]);
+        return response()->json(['success' => 'you followed user successfully']);
     }
 
     public function unFollowUser(int $profileId)
@@ -106,22 +87,17 @@ class PassportController extends Controller
             ]);
         }
         $user->followers()->detach(auth()->user()->id);
-        return response()->json([
-            'success' => 'you unfollowed user successfully',
-        ]);
+        return response()->json(['success' => 'you unfollowed user successfully']);
     }
 
     public function timeline()
     {
-        $following = User::find(auth()->user()->id)->followings()->pluck('name')->toArray();
-        $following_ids = User::find(auth()->user()->id)->followings()->pluck('id')->toArray();
-        $tweets = Tweet::whereIn('user_id', $following_ids)->join('users', 'tweets.user_id', '=', 'users.id')->paginate(2, ['description', 'users.name']);
-        return response()->json([
-            'success' => true,
-            'following' => $following,
-            'tweets' => $tweets,
-
-        ]);
+        $user = auth()->user()->id;
+        $following = User::find($user)->followings()->pluck('name')->toArray();
+        $following_ids = User::find($user)->followings()->pluck('id')->toArray();
+        $tweets = Tweet::whereIn('user_id', $following_ids)->join('users', 'tweets.user_id', '=', 'users.id');
+        $tweetsPaginate = $tweets->paginate(2, ['description', 'users.name']);
+        return response()->json(['success' => true, 'following' => $following, 'tweets' => $tweetsPaginate]);
     }
 
 }
