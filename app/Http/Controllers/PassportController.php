@@ -41,7 +41,7 @@ class PassportController extends Controller
         }
     }
 
-    public function details()
+    public function getUserDetails()
     {
         return response()->json(['user' => auth()->user()], 200);
     }
@@ -81,7 +81,7 @@ class PassportController extends Controller
         return response()->json(['success' => 'you unfollowed user successfully']);
     }
 
-    public function timeline()
+    public function showUserTimeline()
     {
         $user = auth()->user()->id;
         $following = User::find($user)->followings()->pluck('name')->toArray();
