@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\API\RegisterUserRequest;
 use App\Tweet;
 use App\User;
 use Illuminate\Http\Request;
@@ -9,30 +10,20 @@ use Illuminate\Support\Facades\Storage;
 
 class PassportController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterUserRequest $request)
     {
+        $password = bcrypt($request->password);
         $img = Storage::putFile('public/user', $request->file('img'));
-
-        $validator = \Validator::make($request->all(), ['name' => 'required|min:3',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'img' => 'required']);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
+        $user = User::create( $request->only(['name', 'email'])+
+           [
+            'password' => $password,
             "img" => $img,
-
         ]);
+
 
         $token = $user->createToken('Blog')->accessToken;
 
-        return response()->json(['success' => true, 'token' => $token], 200);
+        return response()->json(['success' => true, 'data' => $user, 'token' => $token], 200);
     }
 
     public function login(Request $request)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\API\StoreTweetRequest;
 use App\Tweet;
 use Illuminate\Http\Request;
 
@@ -36,12 +37,8 @@ class TweetController extends Controller
         ], 400);
     }
 
-    public function store(Request $request)
+    public function store(StoreTweetRequest $request)
     {
-        $this->validate($request, [
-            'description' => 'required|unique:tweets',
-        ]);
-
         $tweet = new Tweet();
         $tweet->description = $request->description;
         $userTweets = auth()->user()->tweets();
