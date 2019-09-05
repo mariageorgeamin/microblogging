@@ -28,7 +28,7 @@ class TweetController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Tweet with id ' . $id . ' not found',
-            ], 400);
+            ], 404);
         }
 
         return response()->json([
@@ -65,7 +65,7 @@ class TweetController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Tweet with id ' . $id . ' not found',
-            ], 400);
+            ], 404);
         }
 
         if ($tweet->delete()) {
