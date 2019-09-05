@@ -62,12 +62,22 @@ class PassportController extends Controller
             'data' => $users,
         ]);
     }
-    public function followUser(int $profileId)
+    public function followUser($profileId)
     {
+
         $user = User::find($profileId);
+
         if (!$user) {
             return response()->json([
                 'error' => 'error user doesnot exist',
+            ]);
+        }
+
+        $exists = $this->userRepo->isFollowing($profileId);
+
+        if($exists){
+            return response()->json([
+                'error' => 'error user already followed',
             ]);
         }
 
@@ -75,7 +85,7 @@ class PassportController extends Controller
         return response()->json(['success' => 'you followed user successfully']);
     }
 
-    public function unFollowUser(int $profileId)
+    public function unFollowUser($profileId)
     {
         $user = User::find($profileId);
         if (!$user) {
@@ -84,6 +94,15 @@ class PassportController extends Controller
                 'error' => 'error user doesnot exist',
             ]);
         }
+
+        $exists = $this->userRepo->isFollowing($profileId);
+
+        if(!$exists){
+            return response()->json([
+                'error' => 'error user already unfollowed',
+            ]);
+        }
+
         $user->followers()->detach(auth()->user()->id);
         return response()->json(['success' => 'you unfollowed user successfully']);
     }

@@ -25,4 +25,10 @@ class UserRepo implements UserInterface
         $tweetsPaginate = $tweets->paginate(2, ['description', 'users.name']);
         return $tweetsPaginate;
     }
+
+    public function isFollowing($profileId)
+    {
+        $user = User::find($profileId);
+        return $user->followers->contains(auth()->user()->id);
+    }
 }
