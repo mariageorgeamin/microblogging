@@ -112,7 +112,12 @@ You can login with seeded data the default password is 123456
 ## Register API
 
 **Route: POST** http://127.0.0.1:8000/api/register
-You need body form data name,email,password,img(file)
+You need body form data name,email,password,img(file) and make sure of that
+```
+'headers' => [
+    'Accept' => 'application/json',
+]
+```
 
 ## Login
 
