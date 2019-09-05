@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\API\RegisterUserRequest;
 use App\Tweet;
 use App\User;
+use App\UserInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class PassportController extends Controller
 {
+    protected $userRepo;
+
+    public function __construct(UserInterface $userRepo) {
+        $this->userRepo = $userRepo;
+    }
+
     public function register(RegisterUserRequest $request)
     {
         $password = bcrypt($request->password);
@@ -84,10 +91,9 @@ class PassportController extends Controller
     public function showUserTimeline()
     {
         $user = auth()->user()->id;
-        $following = User::find($user)->followings()->pluck('name')->toArray();
-        $following_ids = User::find($user)->followings()->pluck('id')->toArray();
-        $tweets = Tweet::whereIn('user_id', $following_ids)->join('users', 'tweets.user_id', '=', 'users.id');
-        $tweetsPaginate = $tweets->paginate(2, ['description', 'users.name']);
+        $following_ids = $this->userRepo->getUserFollowingsIDs($user);
+        $following = $this->userRepo->getUserFollowings($user);
+        $tweetsPaginate = $this->userRepo->getTimelineTweets($following_ids);
         return response()->json(['success' => true, 'following' => $following, 'tweets' => $tweetsPaginate]);
     }
 
